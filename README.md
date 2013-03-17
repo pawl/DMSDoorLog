@@ -7,3 +7,8 @@ Required Hardware:
  - Arduino 
  - Door Strike w/ sensor (http://www.kawamall.com/pd_1x_strike38s.cfm)
  - Raspberry Pi or Linux PC
+
+On the arduino:
+ - Use the Debounce example in the arduino IDE and modify it to send data via 9600 baud serial
+ - Send 1 if the door is open
+ - Send 0 if the door is closed
