@@ -43,15 +43,17 @@ while True:
         else:
                 print ("Disconnected")
                 
-        #sound alarm at 5,10,15,20,25 minutes
-        #600 * polled ever .5 seconds = 5 minutes
-        if (doorCount == 600) or (doorCount == 1200) or (doorCount == 1800) or (doorCount == 2400) or (doorCount == 3000):
-                d = datetime.datetime.now()
-                if d.hour in range(0, 10):
-                        call(["mplayer", "shutdoor.mp3"])
+        
         #trigger the email if > 30 minutes
-        elif doorCount > 3600:
+        if doorCount > 3600:
                 d = datetime.datetime.now()
                 if d.hour in range(0,10):
                         send_email()
                         doorCount = 0
+        #sound alarm at 5,10,15,20,25 minutes
+        #600 * polled ever .5 seconds = 5 minutes
+        elif (doorCount > 0) and ((doorCount % 600) == 0):
+                d = datetime.datetime.now()
+                if d.hour in range(0, 10):
+                        call(["mplayer", "shutdoor.mp3"])
+
