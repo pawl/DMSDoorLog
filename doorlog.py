@@ -1,16 +1,17 @@
 import serial
 import datetime
 import smtplib
+from subprocess import call
 
 doorCount = 0
 
 
-TO = 'email@here.com'
-GMAIL_USER = 'email@here.com'
+TO = 'to@email.com'
+GMAIL_USER = 'your@email.com'
 GMAIL_PASS = 'secret'
 
 SUBJECT = 'Door Open Alert'
-TEXT = 'The front door has been open for longer than 15 minutes after midnight and before 10AM.'
+TEXT = 'The front door has been open for longer than 30 minutes after midnight and before 10AM.'
 
 ser=serial.Serial('/dev/ttyACM0', 9600, timeout=20)
 
@@ -39,8 +40,10 @@ while True:
                         doorCount += 1
         else:
                 print ("Disconnected")
-        if doorCount > 1800:
+        if (doorCount == 600) or (doorCount == 1200) or (doorCount == 1800) or (doorCount == 2400) or (doorCount == 3000):
                 d = datetime.datetime.now()
                 if d.hour in range(0, 10):
-                        send_email()
+                        call(["mplayer", "shutdoor.mp3"])
+        elif doorCount > 3600:
+                send_email()
                 doorCount = 0
