@@ -13,6 +13,7 @@ GMAIL_PASS = 'secret'
 SUBJECT = 'Door Open Alert'
 TEXT = 'The front door has been open for longer than 30 minutes after midnight and before 10AM.'
 
+# change '/dev/ttyACM0' to the port your arduino is on
 ser=serial.Serial('/dev/ttyACM0', 9600, timeout=20)
 
 def send_email():
@@ -33,6 +34,7 @@ def send_email():
 
 while True:
         message = ser.read()
+        # give an error if there is nothing read from serial
         if message:
                 if message[0] == '0':
                         doorCount = 0
@@ -40,10 +42,14 @@ while True:
                         doorCount += 1
         else:
                 print ("Disconnected")
+                
+        #sound alarm at 5,10,15,20,25 minutes
+        #600 * polled ever .5 seconds = 5 minutes
         if (doorCount == 600) or (doorCount == 1200) or (doorCount == 1800) or (doorCount == 2400) or (doorCount == 3000):
                 d = datetime.datetime.now()
                 if d.hour in range(0, 10):
                         call(["mplayer", "shutdoor.mp3"])
+        #trigger the email if > 30 minutes
         elif doorCount > 3600:
                 d = datetime.datetime.now()
                 if d.hour in range(0,10):
