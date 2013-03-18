@@ -6,7 +6,7 @@ from subprocess import call
 doorCount = 0
 
 
-TO = 'to@email.com'
+TO = 'their@email.com'
 GMAIL_USER = 'your@email.com'
 GMAIL_PASS = 'secret'
 
@@ -45,5 +45,7 @@ while True:
                 if d.hour in range(0, 10):
                         call(["mplayer", "shutdoor.mp3"])
         elif doorCount > 3600:
-                send_email()
-                doorCount = 0
+                d = datetime.datetime.now()
+                if d.hour in range(0,10):
+                        send_email()
+                        doorCount = 0
