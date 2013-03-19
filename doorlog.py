@@ -50,7 +50,7 @@ while True:
     #trigger the email if > 30 minutes
     if doorCount > 3600:
         d = datetime.datetime.now()
-        if d.hour in range(0,10):
+        if d.hour in range(timeRangeStart,timeRangeEnd):
             send_email()
             doorCount = 0
     #sound alarm at 5,10,15,20,25 minutes
