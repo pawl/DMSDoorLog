@@ -30,29 +30,29 @@ def send_email():
     smtpserver.sendmail(GMAIL_USER, TO, msg)
     smtpserver.close()
 
-
-
 while True:
-        message = ser.read()
-        # give an error if there is nothing read from serial
-        if message:
-                if message[0] == '0':
-                        doorCount = 0
-                if message[0] == '1':
-                        doorCount += 1
-        else:
-                print ("Disconnected")
-                
-        
-        #trigger the email if > 30 minutes
-        if doorCount > 3600:
-                d = datetime.datetime.now()
-                if d.hour in range(0,10):
-                        send_email()
-                        doorCount = 0
-        #sound alarm at 5,10,15,20,25 minutes
-        #600 * polled ever .5 seconds = 5 minutes
-        elif (doorCount > 0) and ((doorCount % 600) == 0):
+    message = ser.read()
+    # count how long the door is open
+    # else - give an error when nothing is read from serial
+    if message:
+            # 0 = door closed
+            if message[0] == '0':
+                    doorCount = 0
+            # 1 = door open
+            if message[0] == '1':
+                    doorCount += 1
+    else:
+        print ("Disconnected")
+
+    #trigger the email if > 30 minutes
+    if doorCount > 3600:
+            d = datetime.datetime.now()
+            if d.hour in range(0,10):
+                    send_email()
+                    doorCount = 0
+    #sound alarm at 5,10,15,20,25 minutes
+    #600 * polled ever .5 seconds = 5 minutes
+    elif (doorCount > 0) and ((doorCount % 600) == 0):
                 d = datetime.datetime.now()
                 if d.hour in range(0, 10):
                         call(["mplayer", "shutdoor.mp3"])
